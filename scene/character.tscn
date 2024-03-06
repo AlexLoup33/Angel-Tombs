@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://byk8hohfs126v"]
+
+[ext_resource type="Script" path="res://script/character.gd" id="1_m8tp5"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_r0rco"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ko0f6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_73g0c"]
+size = Vector3(1, 1.66656, 0.534286)
+
+[node name="Character" type="CharacterBody3D"]
+script = ExtResource("1_m8tp5")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_r0rco")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_ko0f6")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.751918, -0.299638)
+
+[node name="Interaction" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.06892)
+
+[node name="InteractionBox" type="CollisionShape3D" parent="Interaction"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0525818, 1.23419)
+shape = SubResource("BoxShape3D_73g0c")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.244829, -2.31167)
+
+[connection signal="body_entered" from="Interaction" to="." method="_on_interaction_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
