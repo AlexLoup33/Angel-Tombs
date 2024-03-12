@@ -28,10 +28,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.06892)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0525818, 1.23419)
 shape = SubResource("BoxShape3D_73g0c")
 
-[node name="Timer" type="Timer" parent="."]
-
-[node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.244829, -2.31167)
+[node name="Label" type="Label" parent="."]
+offset_left = 246.0
+offset_top = 579.0
+offset_right = 919.0
+offset_bottom = 646.0
 
 [connection signal="body_entered" from="Interaction" to="." method="_on_interaction_body_entered"]
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

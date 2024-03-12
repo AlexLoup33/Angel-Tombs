@@ -5,10 +5,12 @@ const JUMP_VELOCITY : float = 4.5
 
 @onready var Camera = $Camera
 @onready var InteractionBox = $Interaction/InteractionBox
-@onready var MessageTimer = $Timer
-@onready var MessageLabel = $Label3D
+@onready var MessageLabel = $Label
 
 var message = false
+
+const message_timer_limit = 3
+var timer = 0
 
 #Sensibilité de la souris
 var mouse_sensitivity : float = 0.06 
@@ -31,12 +33,21 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 	
-	if message :
-		if MessageTimer.is_stopped() or MessageTimer.paused:
-			MessageTimer.start(3)
-			MessageLabel.show()
-	else :
+	if message:
+		timer += delta
+		MessageLabel.show()
+		if timer >= message_timer_limit:
+			message = false
+	else : 
+		timer = 0
 		MessageLabel.hide()
+	
+	#if message :
+		#if MessageTimer.is_stopped() or MessageTimer.paused:
+			#MessageTimer.start(3)
+			#MessageLabel.show()
+	#else :
+		#MessageLabel.hide()
 	# Gestion du saut
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -65,24 +76,18 @@ func _input(event):
 		Camera.rotate_x(-event.relative.y * mouse_sensitivity)
 		Camera.rotation.x = clampf(Camera.rotation.x, -deg_to_rad(70), deg_to_rad(70))
 
-#TODO : Fonction qui affiche un message temporaire si le jeu effectue une action imcomplète
-func _show_message(msg : String):
-	MessageLabel.text = msg
-	message = true
-
 func _on_interaction_body_entered(body):
 	if body.has_method("interact"):
 		body.interact()
-		_show_message("J'ai interagit avec " + body.name)
+		message = true
+		MessageLabel.text = "J'ai interagit avec " + body.name
 	if body.name == "Door":
 		if body.lock == true:
 			if inventory["key"] > 0:
 				body.unlock()
 				inventory["key"] -= 1
-			else : 
-				_show_message("Je dois trouver une clé !")
+			else :
+				message = true
+				MessageLabel.text = "Je dois trouver une clé !"
 		else :
 			body.change_state()
-
-func _on_timer_timeout():
-	message = false
